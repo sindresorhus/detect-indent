@@ -1,0 +1,11 @@
+{
+	"name": "detect-indent",
+	"version": "0.1.0",
+	"main": "detect-indent.js",
+	"ignore": [
+		"test",
+		".*",
+		"component.json",
+		"package.json"
+	]
+}

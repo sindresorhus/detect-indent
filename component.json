@@ -1,0 +1,22 @@
+{
+  "name": "detect-indent",
+  "version": "0.1.0",
+  "description": "Detect the indentation of code",
+  "repo": "sindresorhus/detect-indent",
+  "keywords": [
+    "indent",
+    "indentation",
+    "detect",
+    "infer",
+    "identify",
+    "code",
+    "string",
+    "text",
+    "source",
+    "space",
+    "tab"
+  ],
+  "main": "detect-indent.js",
+  "scripts": ["detect-indent.js"],
+  "license": "MIT"
+}
