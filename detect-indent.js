@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 	var RE_MULTILINE_COMMENTS = /\*(.|[\r\n])*?\*/;
-	var RE_EMPTY_LINE = /^\s$/;
+	var RE_EMPTY_LINE = /^\s+$/;
 	var RE_LEADING_WHITESPACE = /^[ \t]+/;
 
 	function gcd(a, b) {
