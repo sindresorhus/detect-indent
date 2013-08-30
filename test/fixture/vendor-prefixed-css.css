@@ -1,0 +1,10 @@
+#leaflet {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-box-shadow: inset -5px -5px 5px rgba(0, 0, 0, 0.6);
+       -moz-box-shadow: inset -5px -5px 5px rgba(0, 0, 0, 0.6);
+            box-shadow: inset -5px -5px 5px rgba(0, 0, 0, 0.6);
+}

@@ -52,4 +52,8 @@ describe('detectIndent()', function () {
 	it('should detect the indent of a file with mostly spaces', function () {
 		assert.equal(detectIndent(readFileSync('fixture/mixed-space.js')), '    ');
 	});
+
+	it('should detect the indent of a weirdly indented vendor prefixed CSS', function () {
+		assert.equal(detectIndent(readFileSync('fixture/vendor-prefixed-css.css')), '    ');
+	});
 });

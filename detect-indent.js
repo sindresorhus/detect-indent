@@ -24,13 +24,19 @@
 
 			if (matches) {
 				var whitespace = matches[0];
+				var len = whitespace.length;
 
 				if (whitespace.indexOf('\t') !== -1) {
 					tabs++;
 				}
 
+				// convert odd numbers to even numbers
+				if (len % 2 === 1) {
+					len += 1;
+				}
+
 				if (whitespace.indexOf(' ') !== -1) {
-					spaces.push(whitespace.length);
+					spaces.push(len);
 				}
 			}
 		}
