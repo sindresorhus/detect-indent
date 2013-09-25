@@ -49,6 +49,10 @@
 			return '\t';
 		}
 
+		if (spaces.length === 0) {
+			return null;
+		}
+
 		// greatest common divisor is most likely the indent size
 		var indentSize = spaces.reduce(gcd);
 

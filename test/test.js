@@ -64,4 +64,8 @@ describe('detectIndent()', function () {
 			assert.equal(e.message, 'Argument must be a string.');
 		}
 	});
+
+	it('should return `null` when there are no indentation', function () {
+		assert.equal(detectIndent('<ul></ul>'), null);
+	});
 });
