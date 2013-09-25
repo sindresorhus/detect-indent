@@ -56,4 +56,12 @@ describe('detectIndent()', function () {
 	it('should detect the indent of a weirdly indented vendor prefixed CSS', function () {
 		assert.equal(detectIndent(readFileSync('fixture/vendor-prefixed-css.css')), '    ');
 	});
+
+	it('should throw an error if input is not a string', function () {
+		try {
+			detectIndent({});
+		} catch (e) {
+			assert.equal(e.message, 'Argument must be a string.');
+		}
+	});
 });
