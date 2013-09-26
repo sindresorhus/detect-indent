@@ -8,6 +8,7 @@ Pass in a string and get the indentation. Works in Node.js and the browser on an
 ## Use cases
 
 - Persisting the indentation when modifying a file.
+- Have new content match the existing indentation.
 - Setting the right indentation in your editor.
 
 
