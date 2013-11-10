@@ -15,8 +15,6 @@
     "space",
     "tab"
   ],
-  "homepage": "https://github.com/sindresorhus/detect-indent",
-  "bugs": "https://github.com/sindresorhus/detect-indent/issues",
   "license": "MIT",
   "author": {
     "name": "Sindre Sorhus",
