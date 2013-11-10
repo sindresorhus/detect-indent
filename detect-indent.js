@@ -1,3 +1,9 @@
+/*!
+	detect-indent
+	by Sindre Sorhus
+	https://github.com/sindresorhus/detect-indent
+	MIT License
+*/
 (function () {
 	'use strict';
 	var RE_MULTILINE_COMMENTS = /\*(.|[\r\n])*?\*/;
