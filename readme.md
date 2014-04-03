@@ -1,8 +1,8 @@
-# detect-indent [![Build Status](https://secure.travis-ci.org/sindresorhus/detect-indent.png?branch=master)](http://travis-ci.org/sindresorhus/detect-indent)
+# detect-indent [![Build Status](https://travis-ci.org/sindresorhus/detect-indent.svg?branch=master)](https://travis-ci.org/sindresorhus/detect-indent)
 
 > Detect the indentation of code
 
-Pass in a string and get the indentation. Works in Node.js and the browser on any kind of text.
+Pass in a string of any kind of text and get the indentation.
 
 
 ## Use cases
@@ -16,22 +16,16 @@ Pass in a string and get the indentation. Works in Node.js and the browser on an
 
 Download [manually](https://github.com/sindresorhus/detect-indent/releases) or with a package-manager.
 
-#### [npm](https://npmjs.org/package/detect-indent)
-
-```
-npm install --save detect-indent
+```bash
+$ npm install --save detect-indent
 ```
 
-#### [Bower](http://bower.io)
-
-```
-bower install --save detect-indent
+```bash
+$ bower install --save detect-indent
 ```
 
-#### [Component](https://github.com/component/component)
-
-```
-component install sindresorhus/detect-indent
+```bash
+$ component install sindresorhus/detect-indent
 ```
 
 
@@ -40,7 +34,7 @@ component install sindresorhus/detect-indent
 Accepts a string and returns the indentation or `null` if it can't be detected.
 
 
-## Example
+## Usage
 
 Modify a JSON file while persisting the indentation in Node.js.
 
@@ -70,4 +64,4 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+[MIT](http://opensource.org/licenses/MIT) © [Sindre Sorhus](http://sindresorhus.com)
