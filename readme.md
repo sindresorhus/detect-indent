@@ -21,9 +21,12 @@ $ npm install --save detect-indent
 
 ## Usage
 
-Modify a JSON file while persisting the indentation in Node.js.
+Accepts a string and returns the indentation or `null` if it can't be detected.
+
+
 
 ```js
+// modify a JSON file while persisting the indentation in Node
 var fs = require('fs');
 var detectIndent = require('detect-indent');
 /*
@@ -47,9 +50,23 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 ```
 
 
-## API
+## CLI
 
-Accepts a string and returns the indentation or `null` if it can't be detected.
+```sh
+$ npm install --global detect-indent
+```
+
+```sh
+$ detect-indent --help
+
+Usage
+  $ detect-indent <file>
+  $ echo <string> | detect-indent
+
+Example
+  $ echo '  foo\n  bar' | detect-indent | wc --chars
+  2
+```
 
 
 ## License
