@@ -19,7 +19,7 @@
 			throw new TypeError('Expected a string');
 		}
 
-		var lines = str.replace(RE_MULTILINE_COMMENTS, '').split(/\n|\r\n?/);
+		var lines = str.replace(RE_MULTILINE_COMMENTS, '').split(/\r?\n/);
 		var tabs = 0;
 		var spaces = [];
 
@@ -67,7 +67,7 @@
 		}
 
 		return null;
-	};
+	}
 
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = detectIndent;
