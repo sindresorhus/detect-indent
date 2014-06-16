@@ -14,24 +14,9 @@ Pass in a string of any kind of text and get the indentation.
 
 ## Install
 
-Download [manually](https://github.com/sindresorhus/detect-indent/releases) or with a package-manager.
-
-```bash
+```sh
 $ npm install --save detect-indent
 ```
-
-```bash
-$ bower install --save detect-indent
-```
-
-```bash
-$ component install sindresorhus/detect-indent
-```
-
-
-## API
-
-Accepts a string and returns the indentation or `null` if it can't be detected.
 
 
 ## Usage
@@ -62,6 +47,11 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 ```
 
 
+## API
+
+Accepts a string and returns the indentation or `null` if it can't be detected.
+
+
 ## License
 
-[MIT](http://opensource.org/licenses/MIT) © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](http://sindresorhus.com)
