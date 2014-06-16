@@ -57,14 +57,6 @@ describe('detectIndent()', function () {
 		assert.equal(detectIndent(readFileSync('fixture/vendor-prefixed-css.css')), '    ');
 	});
 
-	it('should throw an error if input is not a string', function () {
-		try {
-			detectIndent({});
-		} catch (e) {
-			assert.equal(e.message, 'Argument must be a string.');
-		}
-	});
-
 	it('should return `null` when there are no indentation', function () {
 		assert.equal(detectIndent('<ul></ul>'), null);
 	});

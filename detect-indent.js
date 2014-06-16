@@ -16,7 +16,7 @@
 
 	function detectIndent(str) {
 		if (typeof str !== 'string') {
-			throw new Error('Argument must be a string.');
+			throw new TypeError('Expected a string');
 		}
 
 		var lines = str.replace(RE_MULTILINE_COMMENTS, '').split(/\n|\r\n?/);
