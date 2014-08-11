@@ -50,6 +50,22 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 ```
 
 
+### stats
+
+Get indentation stats for a string.
+
+
+
+```js
+var detectIndent = require('detect-indent');
+var file = fs.readFileSync('foo.json', 'utf8');
+
+detectIndent.stats(file);
+//=> { amount: 1, actual: '\t', type: 'tab' }
+```
+
+
+
 ## CLI
 
 ```sh

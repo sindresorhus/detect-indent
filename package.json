@@ -39,7 +39,8 @@
   ],
   "dependencies": {
     "get-stdin": "^0.1.0",
-    "minimist": "^0.1.0"
+    "minimist": "^0.1.0",
+    "strip-comments": "^0.2.0"
   },
   "devDependencies": {
     "mocha": "*"

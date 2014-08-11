@@ -1,63 +1,53 @@
 'use strict';
-var RE_MULTILINE_COMMENTS = /\/\*[\S\s]*?\*\//;
-var RE_EMPTY_LINE = /^\s*$/;
-var RE_LEADING_WHITESPACE = /^[ \t]+/;
+
+var strip = require('strip-comments');
 
 function gcd(a, b) {
 	return b ? gcd(b, a % b) : a;
 }
 
-module.exports = function (str) {
+var detect = module.exports = function (str) {
 	if (typeof str !== 'string') {
 		throw new TypeError('Expected a string');
 	}
 
-	var lines = str.replace(RE_MULTILINE_COMMENTS, '').split(/\r?\n/);
-	var tabs = 0;
-	var spaces = [];
+	var indent = detect.stats(str);
+	if (indent.amount > 0) {
+		return new Array(indent.amount + 1).join(indent.actual);
+	}
 
-	for (var i = 0; i < lines.length; i++) {
-		var line = lines[i];
+	return 0;
+};
 
-		if (RE_EMPTY_LINE.test(line)) {
-			continue;
+
+detect.stats = function (str) {
+	// Strip multi-line comments, and normalize
+  str = strip.block(str).replace(/\r/g, '');
+
+  var re = /^([\u0020\t]*)/;
+  var result = [], t = 0, s = 0;
+
+  str.split(/\n/g).forEach(function(line) {
+    /^\t/.test(line) ? t++ : s++;
+
+    var len = line.match(re)[0].length;
+
+    // convert odd numbers to even numbers
+		if (len % 2 === 1) {
+			len += 1;
 		}
 
-		var matches = line.match(RE_LEADING_WHITESPACE);
+    if (len >= 2) {
+      result.push(len || 0);
+    }
+  });
 
-		if (matches) {
-			var whitespace = matches[0];
-			var len = whitespace.length;
+  // greatest common divisor is most likely the indent size
+  var indent = gcd.apply(gcd, result) || 0;
 
-			if (whitespace.indexOf('\t') !== -1) {
-				tabs++;
-			}
-
-			// convert odd numbers to even numbers
-			if (len % 2 === 1) {
-				len += 1;
-			}
-
-			if (whitespace.indexOf(' ') !== -1) {
-				spaces.push(len);
-			}
-		}
-	}
-
-	if (tabs > spaces.length) {
-		return '\t';
-	}
-
-	if (spaces.length === 0) {
-		return null;
-	}
-
-	// greatest common divisor is most likely the indent size
-	var indentSize = spaces.reduce(gcd);
-
-	if (indentSize > 0) {
-		return new Array(indentSize + 1).join(' ');
-	}
-
-	return null;
-}
+  return {
+    amount: indent === 0 ? 0 : (s === t ? indent / 2 : (t >= s ? indent / 2 : indent)),
+    actual: indent === 0 ? '' : (s >= t ? '\u0020' : '\t'),
+    type: indent === 0 ? 'none' : (s >= t ? 'space' : 'tab')
+  };
+};
