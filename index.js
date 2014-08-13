@@ -26,11 +26,11 @@ module.exports = function (str) {
 		if (len % 2 === 1) {
 			len += 1;
 		}
-		result.push(len || 0);
+		result.push(len);
 	});
 
 	// greatest common divisor is most likely the indent size
-	var indent = result.reduce(gcd) || 0;
+	var indent = result.reduce(gcd);
 
 	var amount = indent === 0 ? 0 : (s === t ? indent / 2 : (t >= s ? indent / 2 : indent));
 	var type = indent === 0 ? null : (s >= t ? 'space' : 'tab');
