@@ -22,7 +22,7 @@ function help() {
 }
 
 function init(data) {
-	var indent = detectIndent(data);
+	var indent = detectIndent(data).indent;
 
 	if (indent !== null) {
 		process.stdout.write(indent);

@@ -6,48 +6,39 @@ function gcd(a, b) {
 	return b ? gcd(b, a % b) : a;
 }
 
-var detect = module.exports = function (str) {
+module.exports = function (str) {
 	if (typeof str !== 'string') {
 		throw new TypeError('Expected a string');
 	}
 
-	var indent = detect.stats(str);
-	if (indent.amount > 0) {
-		return new Array(indent.amount + 1).join(indent.actual);
-	}
-
-	return 0;
-};
-
-
-detect.stats = function (str) {
 	// Strip multi-line comments, and normalize
-  str = strip.block(str).replace(/\r/g, '');
+	str = strip.block(str).replace(/\r/g, '');
 
-  var re = /^([\u0020\t]*)/;
-  var result = [], t = 0, s = 0;
+	var re = /^([ \t]*)/;
+	var result = [], t = 0, s = 0;
 
-  str.split(/\n/g).forEach(function(line) {
-    /^\t/.test(line) ? t++ : s++;
+	str.split(/\n/g).forEach(function(line) {
+		/^\t/.test(line) ? t++ : s++;
 
-    var len = line.match(re)[0].length;
+		var len = line.match(re)[0].length;
 
-    // convert odd numbers to even numbers
+		// convert odd numbers to even numbers
 		if (len % 2 === 1) {
 			len += 1;
 		}
+		result.push(len || 0);
+	});
 
-    if (len >= 2) {
-      result.push(len || 0);
-    }
-  });
+	// greatest common divisor is most likely the indent size
+	var indent = result.reduce(gcd) || 0;
 
-  // greatest common divisor is most likely the indent size
-  var indent = gcd.apply(gcd, result) || 0;
+	var amount = indent === 0 ? 0 : (s === t ? indent / 2 : (t >= s ? indent / 2 : indent));
+	var type = indent === 0 ? null : (s >= t ? 'space' : 'tab');
+	var actual = indent === 0 ? '' : (s >= t ? ' ' : '\t');
 
-  return {
-    amount: indent === 0 ? 0 : (s === t ? indent / 2 : (t >= s ? indent / 2 : indent)),
-    actual: indent === 0 ? '' : (s >= t ? '\u0020' : '\t'),
-    type: indent === 0 ? 'none' : (s >= t ? 'space' : 'tab')
-  };
+	if (amount > 0) {
+		actual = new Array(amount + 1).join(actual);
+	}
+
+	return {amount: amount, type: type, indent: actual};
 };
