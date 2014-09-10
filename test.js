@@ -17,6 +17,11 @@ it('should return indentation stats for spaces', function () {
 	assert.deepEqual(stats, { amount: 4, indent: '    ', type: 'space' });
 });
 
+it('should return indentation stats for tabs', function () {
+	var stats = detectIndent(getFile('fixture/tab-four.js'));
+	assert.deepEqual(stats, { amount: 4, indent: '\t\t\t\t', type: 'tab' });
+});
+
 it('should detect the indent of a file with tab indent', function () {
 	assert.equal(detectIndent(getFile('fixture/tab.js')).indent, '\t');
 });
@@ -59,7 +64,7 @@ it('should return `0` when there is no indentation', function () {
 	assert.equal(detectIndent('<ul></ul>').amount, 0);
 });
 
-it('should return indentation stats for mostly spaces', function () {
+it('should return indentation stats for no indentation', function () {
 	var stats = detectIndent('<ul></ul>');
 	assert.deepEqual(stats, { amount: 0, indent: '', type: null });
 });
