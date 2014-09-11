@@ -1,7 +1,6 @@
 'use strict';
-var RE_MULTILINE_COMMENTS = /\/\*[\S\s]*?\*\//;
-var RE_EMPTY_LINE = /^\s*$/;
-var RE_LEADING_WHITESPACE = /^[ \t]+/;
+
+var strip = require('strip-comments');
 
 function gcd(a, b) {
 	return b ? gcd(b, a % b) : a;
@@ -12,52 +11,34 @@ module.exports = function (str) {
 		throw new TypeError('Expected a string');
 	}
 
-	var lines = str.replace(RE_MULTILINE_COMMENTS, '').split(/\r?\n/);
-	var tabs = 0;
-	var spaces = [];
+	// Strip multi-line comments, and normalize
+	str = strip.block(str).replace(/\r/g, '');
 
-	for (var i = 0; i < lines.length; i++) {
-		var line = lines[i];
+	var re = /^([ \t]*)/;
+	var result = [], t = 0, s = 0;
 
-		if (RE_EMPTY_LINE.test(line)) {
-			continue;
+	str.split(/\n/g).forEach(function(line) {
+		/^\t/.test(line) ? t++ : s++;
+
+		var len = line.match(re)[0].length;
+
+		// convert odd numbers to even numbers
+		if (len % 2 === 1) {
+			len += 1;
 		}
-
-		var matches = line.match(RE_LEADING_WHITESPACE);
-
-		if (matches) {
-			var whitespace = matches[0];
-			var len = whitespace.length;
-
-			if (whitespace.indexOf('\t') !== -1) {
-				tabs++;
-			}
-
-			// convert odd numbers to even numbers
-			if (len % 2 === 1) {
-				len += 1;
-			}
-
-			if (whitespace.indexOf(' ') !== -1) {
-				spaces.push(len);
-			}
-		}
-	}
-
-	if (tabs > spaces.length) {
-		return '\t';
-	}
-
-	if (spaces.length === 0) {
-		return null;
-	}
+		result.push(len);
+	});
 
 	// greatest common divisor is most likely the indent size
-	var indentSize = spaces.reduce(gcd);
+	var indent = result.reduce(gcd);
 
-	if (indentSize > 0) {
-		return new Array(indentSize + 1).join(' ');
+	var amount = indent === 0 ? 0 : (s === t ? indent / 2 : (t >= s ? indent / 2 : indent));
+	var type = indent === 0 ? null : (s >= t ? 'space' : 'tab');
+	var actual = indent === 0 ? '' : (s >= t ? ' ' : '\t');
+
+	if (amount > 0) {
+		actual = new Array(amount + 1).join(actual);
 	}
 
-	return null;
-}
+	return {amount: amount, type: type, indent: actual};
+};

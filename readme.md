@@ -21,7 +21,11 @@ $ npm install --save detect-indent
 
 ## Usage
 
-Accepts a string and returns the indentation or `null` if it can't be detected.
+Accepts a string and returns an object with stats about the indentation:  
+
+* `amount`: {Number} the amount of indentation, e.g. `2`  
+* `type`: {String|Null} the type of indentation. Possible values are `tab`, `space` or `null` if no indentation is detected  
+* `indent`: {String} the actual indentation. e.g. `    `  
 
 
 
@@ -36,12 +40,12 @@ var detectIndent = require('detect-indent');
 */
 var file = fs.readFileSync('foo.json', 'utf8');
 // tries to detect the indentation and falls back to a default if it can't
-var indent = detectIndent(file) || '    ';
+var detected = detectIndent(file) || '    ';
 var json = JSON.parse(file);
 
 json.ilove = 'unicorns';
 
-fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
+fs.writeFileSync('foo.json', JSON.stringify(json, null, detected.indent));
 /*
 {
     "ilove": "unicorns"
