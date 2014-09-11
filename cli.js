@@ -9,15 +9,16 @@ var input = argv._[0];
 
 function help() {
 	console.log([
-		pkg.description,
 		'',
-		'Usage',
-		'  $ detect-indent <file>',
-		'  $ echo <string> | detect-indent',
+		'  ' + pkg.description,
 		'',
-		'Example',
-		'  $ echo \'  foo\\n  bar\' | detect-indent | wc --chars',
-		'  2'
+		'  Usage',
+		'    detect-indent <file>',
+		'    echo <string> | detect-indent',
+		'',
+		'  Example',
+		'    echo \'  foo\\n  bar\' | detect-indent | wc --chars',
+		'    2'
 	].join('\n'));
 }
 

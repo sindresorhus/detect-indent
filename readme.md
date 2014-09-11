@@ -21,14 +21,6 @@ $ npm install --save detect-indent
 
 ## Usage
 
-Accepts a string and returns an object with stats about the indentation:  
-
-* `amount`: {Number} the amount of indentation, e.g. `2`  
-* `type`: {String|Null} the type of indentation. Possible values are `tab`, `space` or `null` if no indentation is detected  
-* `indent`: {String} the actual indentation. e.g. `    `  
-
-
-
 ```js
 // modify a JSON file while persisting the indentation in Node
 var fs = require('fs');
@@ -54,22 +46,31 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, detected.indent));
 ```
 
 
+## API
+
+Accepts a string and returns an object with stats about the indentation:  
+
+* `amount`: {Number} the amount of indentation, e.g. `2`  
+* `type`: {String|Null} the type of indentation. Possible values are `tab`, `space` or `null` if no indentation is detected  
+* `indent`: {String} the actual indentation
+
+
 ## CLI
 
 ```sh
 $ npm install --global detect-indent
 ```
 
-```sh
+```
 $ detect-indent --help
 
-Usage
-  $ detect-indent <file>
-  $ echo <string> | detect-indent
+  Usage
+    detect-indent <file>
+    echo <string> | detect-indent
 
-Example
-  $ echo '  foo\n  bar' | detect-indent | wc --chars
-  2
+  Example
+    echo '  foo\n  bar' | detect-indent | wc --chars
+    2
 ```
 
 
