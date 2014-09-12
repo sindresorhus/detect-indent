@@ -32,12 +32,12 @@ var detectIndent = require('detect-indent');
 */
 var file = fs.readFileSync('foo.json', 'utf8');
 // tries to detect the indentation and falls back to a default if it can't
-var detected = detectIndent(file) || '    ';
+var indent = detectIndent(file).indent || '    ';
 var json = JSON.parse(file);
 
 json.ilove = 'unicorns';
 
-fs.writeFileSync('foo.json', JSON.stringify(json, null, detected.indent));
+fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 /*
 {
     "ilove": "unicorns"
