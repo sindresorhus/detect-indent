@@ -1,5 +1,4 @@
 'use strict';
-
 var strip = require('strip-comments');
 
 function gcd(a, b) {
@@ -11,13 +10,15 @@ module.exports = function (str) {
 		throw new TypeError('Expected a string');
 	}
 
-	// Strip multi-line comments, and normalize
+	var re = /^([ \t]*)/;
+	var result = [];
+	var t = 0;
+	var s = 0;
+
+	// strip multi-line comments and normalize
 	str = strip.block(str).replace(/\r/g, '');
 
-	var re = /^([ \t]*)/;
-	var result = [], t = 0, s = 0;
-
-	str.split(/\n/g).forEach(function(line) {
+	str.split(/\n/g).forEach(function (line) {
 		/^\t/.test(line) ? t++ : s++;
 
 		var len = line.match(re)[0].length;
@@ -26,6 +27,7 @@ module.exports = function (str) {
 		if (len % 2 === 1) {
 			len += 1;
 		}
+
 		result.push(len);
 	});
 
@@ -40,5 +42,9 @@ module.exports = function (str) {
 		actual = new Array(amount + 1).join(actual);
 	}
 
-	return {amount: amount, type: type, indent: actual};
+	return {
+		amount: amount,
+		type: type,
+		indent: actual
+	};
 };
