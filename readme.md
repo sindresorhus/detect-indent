@@ -74,6 +74,11 @@ $ detect-indent --help
 ```
 
 
+## Algorithm
+
+It first strips off multi-line comments. Then goes through each line counting whether it's tabs or spaces and the indent size coerced to an even number. The resulting indent size is the GCD (Greates Common Divisor) of the gathered line indent sizes and the type is the most used type.
+
+
 ## License
 
 MIT © [Sindre Sorhus](http://sindresorhus.com)
