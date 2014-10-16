@@ -39,7 +39,8 @@
   ],
   "dependencies": {
     "get-stdin": "^3.0.0",
-    "minimist": "^1.1.0"
+    "minimist": "^1.1.0",
+    "repeating": "^1.1.0"
   },
   "devDependencies": {
     "mocha": "*"

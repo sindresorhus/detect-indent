@@ -4,9 +4,7 @@
 // for indentation and spaces for alignment
 var INDENT_RE = /^(?:( )+|\t+)/;
 
-function strRepeat(str, n) {
-	return new Array(n + 1).join(str);
-}
+var repeating = require('repeating');
 
 module.exports = function (str) {
 	if (typeof str !== 'string') {
@@ -73,10 +71,10 @@ module.exports = function (str) {
 		actual = '';
 	} else if (s >= t) {
 		type = 'space';
-		actual = strRepeat(' ', amount);
+		actual = repeating(' ', amount);
 	} else {
 		type = 'tab';
-		actual = strRepeat('\t', amount);
+		actual = repeating('\t', amount);
 	}
 
 	return {
