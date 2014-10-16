@@ -29,21 +29,21 @@ module.exports = function (str) {
 
 		var matches = line.match(INDENT_RE);
 
+		var indent;
 		if (!matches) {
-			// no indent for this line
-			prev = 0;
-			return;
-		}
-
-		if (matches[1]) {
-			// spaces were used
-			s++;
+			indent = 0;
 		} else {
-			// tabs were used
-			t++;
+			indent = matches[0].length;
+
+			if (matches[1]) {
+				// spaces were used
+				s++;
+			} else {
+				// tabs were used
+				t++;
+			}
 		}
 
-		var indent = matches[0].length;
 		var diff = Math.abs(indent - prev);
 		prev = indent;
 
