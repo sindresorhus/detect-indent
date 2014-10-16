@@ -16,7 +16,7 @@ module.exports = function (str) {
 	var s = 0;
 
 	// remember the indentation used for the previous line
-	var last = 0;
+	var prev = 0;
 
 	// remember how much a given indentation size was used
 	var indents = {};
@@ -31,21 +31,21 @@ module.exports = function (str) {
 
 		if (!matches) {
 			// no indent for this line
-			last = 0;
+			prev = 0;
 			return;
 		}
 
 		if (matches[1]) {
 			// spaces were used
-			++s;
+			s++;
 		} else {
 			// tabs were used
-			++t;
+			t++;
 		}
 
 		var indent = matches[0].length;
-		var diff = Math.abs(indent - last);
-		last = indent;
+		var diff = Math.abs(indent - prev);
+		prev = indent;
 
 		if (diff) {
 			// an indent or deindent has been detected
@@ -65,7 +65,8 @@ module.exports = function (str) {
 		}
 	}
 
-	var type, actual;
+	var type;
+	var actual;
 	if (!amount) {
 		type = null;
 		actual = '';
