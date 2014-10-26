@@ -1,45 +1,81 @@
 'use strict';
-var strip = require('strip-comments');
 
-function gcd(a, b) {
-	return b ? gcd(b, a % b) : a;
-}
+// detect either spaces or tabs but not both to properly handle tabs
+// for indentation and spaces for alignment
+var INDENT_RE = /^(?:( )+|\t+)/;
+
+var repeating = require('repeating');
 
 module.exports = function (str) {
 	if (typeof str !== 'string') {
 		throw new TypeError('Expected a string');
 	}
 
-	var re = /^([ \t]*)/;
-	var result = [];
+	// used to if tabs or spaces are the most used
 	var t = 0;
 	var s = 0;
 
-	// strip multi-line comments and normalize
-	str = strip.block(str).replace(/\r/g, '');
+	// remember the indentation used for the previous line
+	var prev = 0;
+
+	// remember how much a given indentation size was used
+	var indents = {};
 
 	str.split(/\n/g).forEach(function (line) {
-		/^\t/.test(line) ? t++ : s++;
-
-		var len = line.match(re)[0].length;
-
-		// convert odd numbers to even numbers
-		if (len % 2 === 1) {
-			len += 1;
+		if (!line) {
+			// ignore empty lines
+			return;
 		}
 
-		result.push(len);
+		var matches = line.match(INDENT_RE);
+
+		var indent;
+		if (!matches) {
+			indent = 0;
+		} else {
+			indent = matches[0].length;
+
+			if (matches[1]) {
+				// spaces were used
+				s++;
+			} else {
+				// tabs were used
+				t++;
+			}
+		}
+
+		var diff = Math.abs(indent - prev);
+		prev = indent;
+
+		if (diff) {
+			// an indent or deindent has been detected
+			indents[diff] = (indents[diff] || 0) + 1;
+		}
 	});
 
-	// greatest common divisor is most likely the indent size
-	var indent = result.reduce(gcd);
+	// find most frequent indentation
+	var amount = 0;
+	var max = 0;
+	var n;
+	for (var diff in indents) {
+		n = indents[diff];
+		if (n > max) {
+			max = n;
+			amount = +diff;
+		}
+	}
 
-	var amount = indent === 0 ? 0 : (s === t ? indent / 2 : (t >= s ? indent / 2 : indent));
-	var type = indent === 0 ? null : (s >= t ? 'space' : 'tab');
-	var actual = indent === 0 ? '' : (s >= t ? ' ' : '\t');
-
-	if (amount > 0) {
-		actual = new Array(amount + 1).join(actual);
+	var type;
+	var actual;
+	if (!amount) {
+		type = null;
+		actual = '';
+	} else if (s >= t) {
+		type = 'space';
+		actual = repeating(' ', amount);
+	} else {
+		type = 'tab';
+		actual = repeating('\t', amount);
 	}
 
 	return {

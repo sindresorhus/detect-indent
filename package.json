@@ -40,7 +40,7 @@
   "dependencies": {
     "get-stdin": "^3.0.0",
     "minimist": "^1.1.0",
-    "strip-comments": "^0.3.2"
+    "repeating": "^1.1.0"
   },
   "devDependencies": {
     "mocha": "*"
