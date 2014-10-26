@@ -6,20 +6,59 @@ var INDENT_RE = /^(?:( )+|\t+)/;
 
 var repeating = require('repeating');
 
+function getMostUsed(indents) {
+	var result = 0;
+
+	var maxUsed = 0;
+	var maxWeight = 0;
+	var n, indent, u, w;
+	for (n in indents) {
+		indent = indents[n];
+
+		u = indent[0];
+		w = indent[1];
+		if (
+			(u > maxUsed) ||
+			(u === maxUsed) && (w > maxWeight)
+		) {
+			maxUsed = u;
+			maxWeight = w;
+
+			result = +n;
+		}
+	}
+
+	return result;
+}
+
 module.exports = function (str) {
 	if (typeof str !== 'string') {
 		throw new TypeError('Expected a string');
 	}
 
-	// used to if tabs or spaces are the most used
-	var t = 0;
-	var s = 0;
+	// used to see if tabs or spaces are the most used
+	var tabs = 0;
+	var spaces = 0;
 
-	// remember the indentation used for the previous line
+	// remember the size of previous line's indentation
 	var prev = 0;
 
-	// remember how much a given indentation size was used
+	// remember how many indents/unindents as occurred for a given size
+	// and how much lines follow a given indentation
+	//
+	// indents = {
+	//    3: [1, 0],
+	//    4: [1, 5],
+	//    5: [1, 0],
+	//   12: [1, 0],
+	// }
 	var indents = {};
+
+	// pointer to the array of last used indent
+	var current;
+
+	// whether the last action was an indent (opposed to an unindent)
+	var isIndent;
 
 	str.split(/\n/g).forEach(function (line) {
 		if (!line) {
@@ -36,41 +75,41 @@ module.exports = function (str) {
 			indent = matches[0].length;
 
 			if (matches[1]) {
-				// spaces were used
-				s++;
+				spaces++;
 			} else {
-				// tabs were used
-				t++;
+				tabs++;
 			}
 		}
 
-		var diff = Math.abs(indent - prev);
+		var diff = indent - prev;
 		prev = indent;
 
 		if (diff) {
-			// an indent or deindent has been detected
-			indents[diff] = (indents[diff] || 0) + 1;
+			// an indent or unindent has been detected
+
+			isIndent = diff > 0;
+
+			current = indents[isIndent ? diff : -diff];
+
+			if (current) {
+				current[0]++;
+			} else {
+				current = indents[diff] = [1, 0];
+			}
+		} else if (current) {
+			// if the last action was an indent, increment the weight
+			current[1] += +isIndent;
 		}
 	});
 
-	// find most frequent indentation
-	var amount = 0;
-	var max = 0;
-	var n;
-	for (var diff in indents) {
-		n = indents[diff];
-		if (n > max) {
-			max = n;
-			amount = +diff;
-		}
-	}
+	var amount = getMostUsed(indents);
 
 	var type;
 	var actual;
 	if (!amount) {
 		type = null;
 		actual = '';
-	} else if (s >= t) {
+	} else if (spaces >= tabs) {
 		type = 'space';
 		actual = repeating(' ', amount);
 	} else {
