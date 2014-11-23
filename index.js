@@ -1,29 +1,23 @@
 'use strict';
+var repeating = require('repeating');
 
 // detect either spaces or tabs but not both to properly handle tabs
 // for indentation and spaces for alignment
 var INDENT_RE = /^(?:( )+|\t+)/;
 
-var repeating = require('repeating');
-
 function getMostUsed(indents) {
 	var result = 0;
-
 	var maxUsed = 0;
 	var maxWeight = 0;
-	var n, indent, u, w;
-	for (n in indents) {
-		indent = indents[n];
 
-		u = indent[0];
-		w = indent[1];
-		if (
-			(u > maxUsed) ||
-			(u === maxUsed) && (w > maxWeight)
-		) {
+	for (var n in indents) {
+		var indent = indents[n];
+		var u = indent[0];
+		var w = indent[1];
+
+		if (u > maxUsed || u === maxUsed && w > maxWeight) {
 			maxUsed = u;
 			maxWeight = w;
-
 			result = +n;
 		}
 	}
@@ -66,9 +60,9 @@ module.exports = function (str) {
 			return;
 		}
 
+		var indent;
 		var matches = line.match(INDENT_RE);
 
-		var indent;
 		if (!matches) {
 			indent = 0;
 		} else {
