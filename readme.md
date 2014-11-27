@@ -76,11 +76,48 @@ $ detect-indent --help
 
 ## Algorithm
 
-Look for the most common difference between two consecutive non-empty
-lines.
+The current algorithm looks for the most common difference between two
+consecutive non-empty lines.
+
+In the following example, even if the 4-spaces indentation is used 3
+times whereas the 2-spaces one is used twice, it is detected as less
+used because there were only 2 differences with this value instead of
+4 for the 2-spaces:
+
+```css
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background: grey;
+}
+
+p {
+    line-height: 1.3em;
+    margin-top: 1em;
+    text-indent: 2em;
+}
+```
 
 [Source](https://medium.com/@heatherarthur/detecting-code-indentation-eff3ed0fb56b#3918).
 
+Furthermore, if there are more than one most used difference, the one
+with the most lines is selected.
+
+In the following example, the indentation is detected as 4-spaces:
+
+```css
+body {
+  background: grey;
+}
+
+p {
+    line-height: 1.3em;
+    margin-top: 1em;
+    text-indent: 2em;
+}
+```
 
 ## License
 
