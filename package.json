@@ -38,7 +38,7 @@
   "dependencies": {
     "get-stdin": "^4.0.1",
     "minimist": "^1.1.0",
-    "repeating": "^1.1.0"
+    "repeating": "^2.0.0"
   },
   "devDependencies": {
     "ava": "*",
