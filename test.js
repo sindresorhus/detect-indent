@@ -1,5 +1,5 @@
 'use strict';
-var assert = require('assert');
+var test = require('ava');
 var fs = require('fs');
 var path = require('path');
 var detectIndent = require('./');
@@ -8,63 +8,76 @@ function getFile(file) {
 	return fs.readFileSync(path.join(__dirname, file), 'utf8');
 }
 
-it('should detect the indent of a file with space indent', function () {
-	assert.equal(detectIndent(getFile('fixture/space.js')).indent, '    ');
+test('detect the indent of a file with space indent', function (t) {
+	t.is(detectIndent(getFile('fixture/space.js')).indent, '    ');
+	t.end();
 });
 
-it('should return indentation stats for spaces', function () {
+test('return indentation stats for spaces', function (t) {
 	var stats = detectIndent(getFile('fixture/space.js'));
-	assert.deepEqual(stats, { amount: 4, indent: '    ', type: 'space' });
+	t.same(stats, { amount: 4, indent: '    ', type: 'space' });
+	t.end();
 });
 
-it('should return indentation stats for tabs', function () {
+test('return indentation stats for tabs', function (t) {
 	var stats = detectIndent(getFile('fixture/tab-four.js'));
-	assert.deepEqual(stats, { amount: 4, indent: '\t\t\t\t', type: 'tab' });
+	t.same(stats, { amount: 4, indent: '\t\t\t\t', type: 'tab' });
+	t.end();
 });
 
-it('should detect the indent of a file with tab indent', function () {
-	assert.equal(detectIndent(getFile('fixture/tab.js')).indent, '\t');
+test('detect the indent of a file with tab indent', function (t) {
+	t.is(detectIndent(getFile('fixture/tab.js')).indent, '\t');
+	t.end();
 });
 
-it('should return indentation stats for tabs', function () {
+test('return indentation stats for tabs', function (t) {
 	var stats = detectIndent(getFile('fixture/tab.js'));
-	assert.deepEqual(stats, { amount: 1, indent: '\t', type: 'tab' });
+	t.same(stats, { amount: 1, indent: '\t', type: 'tab' });
+	t.end();
 });
 
-it('should detect the indent of a file with equal tabs and spaces', function () {
-	assert.equal(detectIndent(getFile('fixture/mixed-tab.js')).indent, '\t');
+test('detect the indent of a file with equal tabs and spaces', function (t) {
+	t.is(detectIndent(getFile('fixture/mixed-tab.js')).indent, '\t');
+	t.end();
 });
 
-it('should return indentation stats for equal tabs and spaces', function () {
+test('return indentation stats for equal tabs and spaces', function (t) {
 	var indent = detectIndent(getFile('fixture/mixed-tab.js'));
-	assert.deepEqual(indent, { amount: 1, indent: '\t', type: 'tab' });
+	t.same(indent, { amount: 1, indent: '\t', type: 'tab' });
+	t.end();
 });
 
-it('should detect the indent of a file with mostly spaces', function () {
+test('detect the indent of a file with mostly spaces', function (t) {
 	var stats = detectIndent(getFile('fixture/mixed-space.js'));
-	assert.equal(stats.indent, '    ');
+	t.is(stats.indent, '    ');
+	t.end();
 });
 
-it('should return indentation stats for mostly spaces', function () {
+test('return indentation stats for mostly spaces', function (t) {
 	var stats = detectIndent(getFile('fixture/mixed-space.js'));
-	assert.deepEqual(stats, { amount: 4, indent: '    ', type: 'space' });
+	t.same(stats, { amount: 4, indent: '    ', type: 'space' });
+	t.end();
 });
 
-it('should detect the indent of a weirdly indented vendor prefixed CSS', function () {
+test('detect the indent of a weirdly indented vendor prefixed CSS', function (t) {
 	var stats = detectIndent(getFile('fixture/vendor-prefixed-css.css'));
-	assert.equal(stats.indent, '    ');
+	t.is(stats.indent, '    ');
+	t.end();
 });
 
-it('should return indentation stats for mostly spaces', function () {
+test('return indentation stats for mostly spaces', function (t) {
 	var stats = detectIndent(getFile('fixture/vendor-prefixed-css.css'));
-	assert.deepEqual(stats, { amount: 4, indent: '    ', type: 'space' });
+	t.same(stats, { amount: 4, indent: '    ', type: 'space' });
+	t.end();
 });
 
-it('should return `0` when there is no indentation', function () {
-	assert.equal(detectIndent('<ul></ul>').amount, 0);
+test('return `0` when there is no indentation', function (t) {
+	t.is(detectIndent('<ul></ul>').amount, 0);
+	t.end();
 });
 
-it('should return indentation stats for no indentation', function () {
+test('return indentation stats for no indentation', function (t) {
 	var stats = detectIndent('<ul></ul>');
-	assert.deepEqual(stats, { amount: 0, indent: '', type: null });
+	t.same(stats, { amount: 0, indent: '', type: null });
+	t.end();
 });
