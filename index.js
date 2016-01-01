@@ -64,9 +64,7 @@ module.exports = function (str) {
 		var indent;
 		var matches = line.match(INDENT_RE);
 
-		if (!matches) {
-			indent = 0;
-		} else {
+		if (matches) {
 			indent = matches[0].length;
 
 			if (matches[1]) {
@@ -74,6 +72,8 @@ module.exports = function (str) {
 			} else {
 				tabs++;
 			}
+		} else {
+			indent = 0;
 		}
 
 		var diff = indent - prev;
