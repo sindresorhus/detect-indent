@@ -13,7 +13,7 @@ test('detect the indent of a file with space indent', t => {
 
 test('return indentation stats for spaces', t => {
 	const stats = m(getFile('fixture/space.js'));
-	t.same(stats, {
+	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
 		type: 'space'
@@ -22,7 +22,7 @@ test('return indentation stats for spaces', t => {
 
 test('return indentation stats for tabs', t => {
 	const stats = m(getFile('fixture/tab-four.js'));
-	t.same(stats, {
+	t.deepEqual(stats, {
 		amount: 4,
 		indent: '\t\t\t\t',
 		type: 'tab'
@@ -35,7 +35,7 @@ test('detect the indent of a file with tab indent', t => {
 
 test('return indentation stats for tabs', t => {
 	const stats = m(getFile('fixture/tab.js'));
-	t.same(stats, {
+	t.deepEqual(stats, {
 		amount: 1,
 		indent: '\t',
 		type: 'tab'
@@ -48,7 +48,7 @@ test('detect the indent of a file with equal tabs and spaces', t => {
 
 test('return indentation stats for equal tabs and spaces', t => {
 	const indent = m(getFile('fixture/mixed-tab.js'));
-	t.same(indent, {
+	t.deepEqual(indent, {
 		amount: 1,
 		indent: '\t',
 		type: 'tab'
@@ -62,7 +62,7 @@ test('detect the indent of a file with mostly spaces', t => {
 
 test('return indentation stats for mostly spaces', t => {
 	const stats = m(getFile('fixture/mixed-space.js'));
-	t.same(stats, {
+	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
 		type: 'space'
@@ -76,7 +76,7 @@ test('detect the indent of a weirdly indented vendor prefixed CSS', t => {
 
 test('return indentation stats for mostly spaces', t => {
 	const stats = m(getFile('fixture/vendor-prefixed-css.css'));
-	t.same(stats, {
+	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
 		type: 'space'
@@ -89,7 +89,7 @@ test('return `0` when there is no indentation', t => {
 
 test('return indentation stats for no indentation', t => {
 	const stats = m('<ul></ul>');
-	t.same(stats, {
+	t.deepEqual(stats, {
 		amount: 0,
 		indent: '',
 		type: null
