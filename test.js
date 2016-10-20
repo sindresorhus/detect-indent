@@ -20,7 +20,7 @@ test('return indentation stats for spaces', t => {
 	});
 });
 
-test('return indentation stats for tabs', t => {
+test('return indentation stats for multiple tabs', t => {
 	const stats = m(getFile('fixture/tab-four.js'));
 	t.deepEqual(stats, {
 		amount: 4,
@@ -74,7 +74,7 @@ test('detect the indent of a weirdly indented vendor prefixed CSS', t => {
 	t.is(stats.indent, '    ');
 });
 
-test('return indentation stats for mostly spaces', t => {
+test('return indentation stats for various spaces', t => {
 	const stats = m(getFile('fixture/vendor-prefixed-css.css'));
 	t.deepEqual(stats, {
 		amount: 4,
