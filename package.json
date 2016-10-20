@@ -32,7 +32,7 @@
     "tab"
   ],
   "dependencies": {
-    "repeating": "^2.0.0"
+    "repeating": "^3.0.0"
   },
   "devDependencies": {
     "ava": "*",

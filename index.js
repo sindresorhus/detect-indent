@@ -106,10 +106,10 @@ module.exports = function (str) {
 		actual = '';
 	} else if (spaces >= tabs) {
 		type = 'space';
-		actual = repeating(' ', amount);
+		actual = repeating(amount, ' ');
 	} else {
 		type = 'tab';
-		actual = repeating('\t', amount);
+		actual = repeating(amount, '\t');
 	}
 
 	return {
