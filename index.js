@@ -16,7 +16,7 @@ function getMostUsed(indents) {
 		var u = indent[0];
 		var w = indent[1];
 
-		if (u > maxUsed || u === maxUsed && w > maxWeight) {
+		if (u > maxUsed || (u === maxUsed && w > maxWeight)) {
 			maxUsed = u;
 			maxWeight = w;
 			result = Number(n);
