@@ -24,20 +24,20 @@ $ npm install --save detect-indent
 Here we modify a JSON file while persisting the indentation:
 
 ```js
-var fs = require('fs');
-var detectIndent = require('detect-indent');
+const fs = require('fs');
+const detectIndent = require('detect-indent');
 
 /*
 {
     "ilove": "pizza"
 }
 */
-var file = fs.readFileSync('foo.json', 'utf8');
+const file = fs.readFileSync('foo.json', 'utf8');
 
 // tries to detect the indentation and falls back to a default if it can't
-var indent = detectIndent(file).indent || '    ';
+const indent = detectIndent(file).indent || '    ';
 
-var json = JSON.parse(file);
+const json = JSON.parse(file);
 
 json.ilove = 'unicorns';
 
@@ -52,11 +52,11 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 
 ## API
 
-Accepts a string and returns an object with stats about the indentation:  
+Accepts a string and returns an object with stats about the indentation:
 
-* `amount` {number} - Amount of indentation, e.g. `2`  
-* `type` {string|null} - Type of indentation. Possible values are `tab`, `space` or `null` if no indentation is detected  
-* `indent`   {string} - Actual indentation
+* `amount` {number} - Amount of indentation, for example `2`
+* `type` {string|null} - Type of indentation. Possible values are `tab`, `space` or `null` if no indentation is detected
+* `indent` {string} - Actual indentation
 
 
 ## Algorithm
@@ -108,4 +108,4 @@ p {
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

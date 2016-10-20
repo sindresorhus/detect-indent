@@ -1,42 +1,43 @@
-/* eslint-disable guard-for-in */
 'use strict';
-var repeating = require('repeating');
 
 // detect either spaces or tabs but not both to properly handle tabs
 // for indentation and spaces for alignment
-var INDENT_RE = /^(?:( )+|\t+)/;
+const INDENT_RE = /^(?:( )+|\t+)/;
 
 function getMostUsed(indents) {
-	var result = 0;
-	var maxUsed = 0;
-	var maxWeight = 0;
+	let result = 0;
+	let maxUsed = 0;
+	let maxWeight = 0;
 
-	for (var n in indents) {
-		var indent = indents[n];
-		var u = indent[0];
-		var w = indent[1];
+	for (const entry of indents) {
+		// TODO: use destructuring when targeting Node.js 6
+		const key = entry[0];
+		const val = entry[1];
+
+		const u = val[0];
+		const w = val[1];
 
 		if (u > maxUsed || (u === maxUsed && w > maxWeight)) {
 			maxUsed = u;
 			maxWeight = w;
-			result = Number(n);
+			result = Number(key);
 		}
 	}
 
 	return result;
 }
 
-module.exports = function (str) {
+module.exports = str => {
 	if (typeof str !== 'string') {
 		throw new TypeError('Expected a string');
 	}
 
 	// used to see if tabs or spaces are the most used
-	var tabs = 0;
-	var spaces = 0;
+	let tabs = 0;
+	let spaces = 0;
 
 	// remember the size of previous line's indentation
-	var prev = 0;
+	let prev = 0;
 
 	// remember how many indents/unindents as occurred for a given size
 	// and how much lines follow a given indentation
@@ -47,22 +48,22 @@ module.exports = function (str) {
 	//    5: [1, 0],
 	//   12: [1, 0],
 	// }
-	var indents = {};
+	const indents = new Map();
 
 	// pointer to the array of last used indent
-	var current;
+	let current;
 
 	// whether the last action was an indent (opposed to an unindent)
-	var isIndent;
+	let isIndent;
 
-	str.split(/\n/g).forEach(function (line) {
+	for (const line of str.split(/\n/g)) {
 		if (!line) {
 			// ignore empty lines
-			return;
+			continue;
 		}
 
-		var indent;
-		var matches = line.match(INDENT_RE);
+		let indent;
+		const matches = line.match(INDENT_RE);
 
 		if (matches) {
 			indent = matches[0].length;
@@ -76,7 +77,7 @@ module.exports = function (str) {
 			indent = 0;
 		}
 
-		var diff = indent - prev;
+		const diff = indent - prev;
 		prev = indent;
 
 		if (diff) {
@@ -84,37 +85,38 @@ module.exports = function (str) {
 
 			isIndent = diff > 0;
 
-			current = indents[isIndent ? diff : -diff];
+			current = indents.get(isIndent ? diff : -diff);
 
 			if (current) {
 				current[0]++;
 			} else {
-				current = indents[diff] = [1, 0];
+				current = [1, 0];
+				indents.set(diff, current);
 			}
 		} else if (current) {
 			// if the last action was an indent, increment the weight
 			current[1] += Number(isIndent);
 		}
-	});
+	}
 
-	var amount = getMostUsed(indents);
+	const amount = getMostUsed(indents);
 
-	var type;
-	var actual;
+	let type;
+	let indent;
 	if (!amount) {
 		type = null;
-		actual = '';
+		indent = '';
 	} else if (spaces >= tabs) {
 		type = 'space';
-		actual = repeating(' ', amount);
+		indent = ' '.repeat(amount);
 	} else {
 		type = 'tab';
-		actual = repeating('\t', amount);
+		indent = '\t'.repeat(amount);
 	}
 
 	return {
-		amount: amount,
-		type: type,
-		indent: actual
+		amount,
+		type,
+		indent
 	};
 };
