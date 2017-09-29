@@ -1,7 +1,6 @@
 'use strict';
 
-// detect either spaces or tabs but not both to properly handle tabs
-// for indentation and spaces for alignment
+// Detect either spaces or tabs but not both to properly handle tabs for indentation and spaces for alignment
 const INDENT_RE = /^(?:( )+|\t+)/;
 
 function getMostUsed(indents) {
@@ -32,15 +31,14 @@ module.exports = str => {
 		throw new TypeError('Expected a string');
 	}
 
-	// used to see if tabs or spaces are the most used
+	// Used to see if tabs or spaces are the most used
 	let tabs = 0;
 	let spaces = 0;
 
-	// remember the size of previous line's indentation
+	// Remember the size of previous line's indentation
 	let prev = 0;
 
-	// remember how many indents/unindents as occurred for a given size
-	// and how much lines follow a given indentation
+	// Remember how many indents/unindents as occurred for a given size and how much lines follow a given indentation
 	//
 	// indents = {
 	//    3: [1, 0],
@@ -50,15 +48,15 @@ module.exports = str => {
 	// }
 	const indents = new Map();
 
-	// pointer to the array of last used indent
+	// Pointer to the array of last used indent
 	let current;
 
-	// whether the last action was an indent (opposed to an unindent)
+	// Whether the last action was an indent (opposed to an unindent)
 	let isIndent;
 
 	for (const line of str.split(/\n/g)) {
 		if (!line) {
-			// ignore empty lines
+			// Ignore empty lines
 			continue;
 		}
 
@@ -81,7 +79,7 @@ module.exports = str => {
 		prev = indent;
 
 		if (diff) {
-			// an indent or unindent has been detected
+			// An indent or unindent has been detected
 
 			isIndent = diff > 0;
 
@@ -94,7 +92,7 @@ module.exports = str => {
 				indents.set(diff, current);
 			}
 		} else if (current) {
-			// if the last action was an indent, increment the weight
+			// If the last action was an indent, increment the weight
 			current[1] += Number(isIndent);
 		}
 	}
