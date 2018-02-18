@@ -1,11 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import test from 'ava';
-import m from './';
+import m from '.';
 
-function getFile(file) {
-	return fs.readFileSync(path.join(__dirname, file), 'utf8');
-}
+const getFile = file => fs.readFileSync(path.join(__dirname, file), 'utf8');
 
 test('detect the indent of a file with space indent', t => {
 	t.is(m(getFile('fixture/space.js')).indent, '    ');

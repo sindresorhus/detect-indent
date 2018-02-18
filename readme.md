@@ -15,7 +15,7 @@ Pass in a string of any kind of text and get the indentation.
 ## Install
 
 ```
-$ npm install --save detect-indent
+$ npm install detect-indent
 ```
 
 
