@@ -34,7 +34,7 @@ const detectIndent = require('detect-indent');
 */
 const file = fs.readFileSync('foo.json', 'utf8');
 
-// tries to detect the indentation and falls back to a default if it can't
+// Tries to detect the indentation and falls back to a default if it can't
 const indent = detectIndent(file).indent || '    ';
 
 const json = JSON.parse(file);

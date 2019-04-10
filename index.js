@@ -1,24 +1,17 @@
 'use strict';
 
 // Detect either spaces or tabs but not both to properly handle tabs for indentation and spaces for alignment
-const INDENT_RE = /^(?:( )+|\t+)/;
+const INDENT_REGEX = /^(?:( )+|\t+)/;
 
 function getMostUsed(indents) {
 	let result = 0;
 	let maxUsed = 0;
 	let maxWeight = 0;
 
-	for (const entry of indents) {
-		// TODO: use destructuring when targeting Node.js 6
-		const key = entry[0];
-		const val = entry[1];
-
-		const u = val[0];
-		const w = val[1];
-
-		if (u > maxUsed || (u === maxUsed && w > maxWeight)) {
-			maxUsed = u;
-			maxWeight = w;
+	for (const [key, [usedCount, weight]] of indents) {
+		if (usedCount > maxUsed || (usedCount === maxUsed && weight > maxWeight)) {
+			maxUsed = usedCount;
+			maxWeight = weight;
 			result = key;
 		}
 	}
@@ -26,14 +19,14 @@ function getMostUsed(indents) {
 	return result;
 }
 
-module.exports = str => {
-	if (typeof str !== 'string') {
+module.exports = string => {
+	if (typeof string !== 'string') {
 		throw new TypeError('Expected a string');
 	}
 
 	// Remember the size of previous line's indentation
-	let prev = 0;
-	let indentTypePrev;
+	let previousSize = 0;
+	let previousIndentType;
 	// Indents key (ident type + size of the indents/unindents)
 	let key;
 
@@ -48,7 +41,7 @@ module.exports = str => {
 	// }
 	const indents = new Map();
 
-	for (const line of str.split(/\n/g)) {
+	for (const line of string.split(/\n/g)) {
 		if (!line) {
 			// Ignore empty lines
 			continue;
@@ -58,11 +51,11 @@ module.exports = str => {
 		let indentType;
 		let weight;
 		let entry;
-		const matches = line.match(INDENT_RE);
+		const matches = line.match(INDENT_REGEX);
 
-		if (!matches) {
-			prev = 0;
-			indentTypePrev = '';
+		if (matches === null) {
+			previousSize = 0;
+			previousIndentType = '';
 		} else {
 			indent = matches[0].length;
 
@@ -72,22 +65,23 @@ module.exports = str => {
 				indentType = 't';
 			}
 
-			if (indentType !== indentTypePrev) {
-				prev = 0;
+			if (indentType !== previousIndentType) {
+				previousSize = 0;
 			}
-			indentTypePrev = indentType;
+
+			previousIndentType = indentType;
 
 			weight = 0;
 
-			const diff = indent - prev;
-			prev = indent;
+			const indentDifference = indent - previousSize;
+			previousSize = indent;
 
 			// Previous line have same indent?
-			if (diff === 0) {				
+			if (indentDifference === 0) {
 				weight++;
 				// We use the key from previous loop
 			} else {
-				key = indentType + String(diff > 0 ? diff : -diff);
+				key = indentType + String(indentDifference > 0 ? indentDifference : -indentDifference);
 			}
 
 			// Update the stats
@@ -98,8 +92,9 @@ module.exports = str => {
 			} else {
 				entry = [++entry[0], entry[1] + weight];
 			}
+
 			indents.set(key, entry);
-		} 
+		}
 	}
 
 	const result = getMostUsed(indents);
@@ -107,7 +102,7 @@ module.exports = str => {
 	let amount;
 	let type;
 	let indent;
-	if (!result) {
+	if (result === 0) {
 		amount = 0;
 		type = null;
 		indent = '';
@@ -120,7 +115,7 @@ module.exports = str => {
 		} else {
 			type = 'tab';
 			indent = '\t'.repeat(amount);
-		}		
+		}
 	}
 
 	return {
