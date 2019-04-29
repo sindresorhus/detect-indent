@@ -1,14 +1,14 @@
 declare namespace detectIndent {
 	interface Indent {
 		/**
+		Type of indentation. Is `undefined` if no indentation is detected.
+		*/
+		type: 'tab' | 'space' | undefined;
+
+		/**
 		Amount of indentation, for example `2`.
 		*/
 		amount: number;
-
-		/**
-		Type of indentation. Is `null` if no indentation is detected.
-		*/
-		type: 'tab' | 'space' | null;
 
 		/**
 		Actual indentation.

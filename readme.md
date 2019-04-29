@@ -55,7 +55,7 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 Accepts a string and returns an object with stats about the indentation:
 
 * `amount` {number} - Amount of indentation, for example `2`
-* `type` {string|null} - Type of indentation. Possible values are `tab`, `space` or `null` if no indentation is detected
+* `type` {'tab' | 'space' | undefined} - Type of indentation. Possible values are `'tab'`, `'space'` or `undefined` if no indentation is detected
 * `indent` {string} - Actual indentation
 
 

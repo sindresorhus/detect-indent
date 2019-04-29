@@ -5,4 +5,4 @@ const indent = detectIndent('');
 expectType<detectIndent.Indent>(indent);
 expectType<number>(indent.amount);
 expectType<string>(indent.indent);
-expectType<'space' | 'tab' | null>(indent.type);
+expectType<'space' | 'tab' | undefined>(indent.type);

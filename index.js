@@ -99,15 +99,12 @@ module.exports = string => {
 
 	const result = getMostUsed(indents);
 
-	let amount;
+	let amount = 0;
 	let type;
-	let indent;
-	if (result === 0) {
-		amount = 0;
-		type = null;
-		indent = '';
-	} else {
-		amount = Number(result.substring(1));
+	let indent = '';
+
+	if (result !== 0) {
+		amount = Number(result.slice(1));
 
 		if (result[0] === 's') {
 			type = 'space';

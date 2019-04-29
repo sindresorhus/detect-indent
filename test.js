@@ -90,7 +90,7 @@ test('return indentation stats for no indentation', t => {
 	t.deepEqual(stats, {
 		amount: 0,
 		indent: '',
-		type: null
+		type: undefined
 	});
 });
 
