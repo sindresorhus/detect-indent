@@ -19,7 +19,7 @@ function getMostUsed(indents) {
 		if (u > maxUsed || (u === maxUsed && w > maxWeight)) {
 			maxUsed = u;
 			maxWeight = w;
-			result = Number(key);
+			result = key;
 		}
 	}
 
@@ -31,28 +31,22 @@ module.exports = str => {
 		throw new TypeError('Expected a string');
 	}
 
-	// Used to see if tabs or spaces are the most used
-	let tabs = 0;
-	let spaces = 0;
-
 	// Remember the size of previous line's indentation
 	let prev = 0;
+	let indentTypePrev;
+	// Indents key (ident type + size of the indents/unindents)
+	let key;
 
 	// Remember how many indents/unindents as occurred for a given size and how much lines follow a given indentation
+	// The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents
 	//
 	// indents = {
-	//    3: [1, 0],
-	//    4: [1, 5],
-	//    5: [1, 0],
-	//   12: [1, 0],
+	//    t3: [1, 0],
+	//    t4: [1, 5],
+	//    s5: [1, 0],
+	//   s12: [1, 0],
 	// }
 	const indents = new Map();
-
-	// Pointer to the array of last used indent
-	let current;
-
-	// Whether the last action was an indent (opposed to an unindent)
-	let isIndent;
 
 	for (const line of str.split(/\n/g)) {
 		if (!line) {
@@ -61,55 +55,72 @@ module.exports = str => {
 		}
 
 		let indent;
+		let indentType;
+		let weight;
+		let entry;
 		const matches = line.match(INDENT_RE);
 
-		if (matches) {
+		if (!matches) {
+			prev = 0;
+			indentTypePrev = '';
+		} else {
 			indent = matches[0].length;
 
 			if (matches[1]) {
-				spaces++;
+				indentType = 's';
 			} else {
-				tabs++;
+				indentType = 't';
 			}
-		} else {
-			indent = 0;
-		}
 
-		const diff = indent - prev;
-		prev = indent;
+			if (indentType !== indentTypePrev) {
+				prev = 0;
+			}
+			indentTypePrev = indentType;
 
-		if (diff) {
-			// An indent or unindent has been detected
+			weight = 0;
 
-			isIndent = diff > 0;
+			const diff = indent - prev;
+			prev = indent;
 
-			current = indents.get(isIndent ? diff : -diff);
-
-			if (current) {
-				current[0]++;
+			// Previous line have same indent?
+			if (diff === 0) {				
+				weight++;
+				// We use the key from previous loop
 			} else {
-				current = [1, 0];
-				indents.set(diff, current);
+				key = indentType + String(diff > 0 ? diff : -diff);
 			}
-		} else if (current) {
-			// If the last action was an indent, increment the weight
-			current[1] += Number(isIndent);
-		}
+
+			// Update the stats
+			entry = indents.get(key);
+
+			if (entry === undefined) {
+				entry = [1, 0]; // Init
+			} else {
+				entry = [++entry[0], entry[1] + weight];
+			}
+			indents.set(key, entry);
+		} 
 	}
 
-	const amount = getMostUsed(indents);
+	const result = getMostUsed(indents);
 
+	let amount;
 	let type;
 	let indent;
-	if (!amount) {
+	if (!result) {
+		amount = 0;
 		type = null;
 		indent = '';
-	} else if (spaces >= tabs) {
-		type = 'space';
-		indent = ' '.repeat(amount);
 	} else {
-		type = 'tab';
-		indent = '\t'.repeat(amount);
+		amount = Number(result.substring(1));
+
+		if (result[0] === 's') {
+			type = 'space';
+			indent = ' '.repeat(amount);
+		} else {
+			type = 'tab';
+			indent = '\t'.repeat(amount);
+		}		
 	}
 
 	return {

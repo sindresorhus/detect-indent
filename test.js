@@ -103,11 +103,20 @@ test('return indentation stats for fifty-fifty indented files with spaces first'
 	});
 });
 
-test.failing('return indentation stats for fifty-fifty indented files with tabs first', t => {
+test('return indentation stats for fifty-fifty indented files with tabs first', t => {
 	const stats = m(getFile('fixture/fifty-fifty-tab-first.js'));
 	t.deepEqual(stats, {
-		amount: 4,
-		indent: '    ',
-		type: 'space'
+		amount: 1,
+		indent: '	',
+		type: 'tab'
+	});
+});
+
+test('return indentation stats for indented files with spaces and tabs last', t => {
+	const stats = m(getFile('fixture/space-tab-last.js'));
+	t.deepEqual(stats, {
+		amount: 1,
+		indent: '	',
+		type: 'tab'
 	});
 });
