@@ -27,11 +27,12 @@ module.exports = string => {
 	// Remember the size of previous line's indentation
 	let previousSize = 0;
 	let previousIndentType;
+
 	// Indents key (ident type + size of the indents/unindents)
 	let key;
 
-	// Remember how many indents/unindents as occurred for a given size and how much lines follow a given indentation
-	// The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents
+	// Remember how many indents/unindents have occurred for a given size and how many lines follow a given indentation.
+	// The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents.
 	//
 	// indents = {
 	//    t3: [1, 0],
