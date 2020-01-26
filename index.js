@@ -4,7 +4,7 @@
 const INDENT_REGEX = /^(?:( )+|\t+)/;
 
 function getMostUsed(indents) {
-	let result = 0;
+	let result = null;
 	let maxUsed = 0;
 	let maxWeight = 0;
 
@@ -104,7 +104,7 @@ module.exports = string => {
 	let type;
 	let indent = '';
 
-	if (result !== 0) {
+	if (result !== null) {
 		amount = Number(result.slice(1));
 
 		if (result[0] === 's') {
