@@ -102,9 +102,9 @@ function decodeIndentsKey(indentsKey) {
 }
 
 // Return the key (e.g. 's4') from the indents Map that represents the most common indent,
-// or return null if there are no indents.
+// or return undefined if there are no indents.
 function getMostUsedKey(indents) {
-	let result = null;
+	let result;
 	let maxUsed = 0;
 	let maxWeight = 0;
 
@@ -139,7 +139,7 @@ module.exports = string => {
 	let amount = 0;
 	let indent = '';
 
-	if (keyOfMostUsedIndent !== null) {
+	if (keyOfMostUsedIndent !== undefined) {
 		({type, amount} = decodeIndentsKey(keyOfMostUsedIndent));
 		indent = makeIndentString(type, amount);
 	}
