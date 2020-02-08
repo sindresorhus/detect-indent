@@ -3,26 +3,20 @@
 // Detect either spaces or tabs but not both to properly handle tabs for indentation and spaces for alignment
 const INDENT_REGEX = /^(?:( )+|\t+)/;
 
-function getMostUsed(indents) {
-	let result = 0;
-	let maxUsed = 0;
-	let maxWeight = 0;
+const INDENT_TYPE_SPACE = 'space';
+const INDENT_TYPE_TAB = 'tab';
 
-	for (const [key, [usedCount, weight]] of indents) {
-		if (usedCount > maxUsed || (usedCount === maxUsed && weight > maxWeight)) {
-			maxUsed = usedCount;
-			maxWeight = weight;
-			result = key;
-		}
-	}
-
-	return result;
-}
-
-module.exports = string => {
-	if (typeof string !== 'string') {
-		throw new TypeError('Expected a string');
-	}
+// Make a Map that counts how many indents/unindents have occurred for a given size and how many lines follow a given indentation.
+// The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents.
+//
+// indents = {
+//    t3: [1, 0],
+//    t4: [1, 5],
+//    s5: [1, 0],
+//   s12: [1, 0],
+// }
+function makeIndentsMap(string) {
+	const indents = new Map();
 
 	// Remember the size of previous line's indentation
 	let previousSize = 0;
@@ -30,17 +24,6 @@ module.exports = string => {
 
 	// Indents key (ident type + size of the indents/unindents)
 	let key;
-
-	// Remember how many indents/unindents have occurred for a given size and how many lines follow a given indentation.
-	// The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents.
-	//
-	// indents = {
-	//    t3: [1, 0],
-	//    t4: [1, 5],
-	//    s5: [1, 0],
-	//   s12: [1, 0],
-	// }
-	const indents = new Map();
 
 	for (const line of string.split(/\n/g)) {
 		if (!line) {
@@ -61,9 +44,9 @@ module.exports = string => {
 			indent = matches[0].length;
 
 			if (matches[1]) {
-				indentType = 's';
+				indentType = INDENT_TYPE_SPACE;
 			} else {
-				indentType = 't';
+				indentType = INDENT_TYPE_TAB;
 			}
 
 			if (indentType !== previousIndentType) {
@@ -82,7 +65,8 @@ module.exports = string => {
 				weight++;
 				// We use the key from previous loop
 			} else {
-				key = indentType + String(indentDifference > 0 ? indentDifference : -indentDifference);
+				const absoluteIndentDifference = indentDifference > 0 ? indentDifference : -indentDifference;
+				key = encodeIndentsKey(indentType, absoluteIndentDifference);
 			}
 
 			// Update the stats
@@ -98,22 +82,63 @@ module.exports = string => {
 		}
 	}
 
-	const result = getMostUsed(indents);
+	return indents;
+}
 
-	let amount = 0;
+// Encode the indent type and amount as a string (e.g. 's4') for use as a compound key in the indents Map.
+function encodeIndentsKey(indentType, indentAmount) {
+	const typeCharacter = indentType === INDENT_TYPE_SPACE ? 's' : 't';
+	return typeCharacter + String(indentAmount);
+}
+
+// Extract the indent type and amount from a key of the indents Map.
+function decodeIndentsKey(indentsKey) {
+	const keyHasTypeSpace = indentsKey[0] === 's';
+	const type = keyHasTypeSpace ? INDENT_TYPE_SPACE : INDENT_TYPE_TAB;
+
+	const amount = Number(indentsKey.slice(1));
+
+	return {type, amount};
+}
+
+// Return the key (e.g. 's4') from the indents Map that represents the most common indent,
+// or return undefined if there are no indents.
+function getMostUsedKey(indents) {
+	let result;
+	let maxUsed = 0;
+	let maxWeight = 0;
+
+	for (const [key, [usedCount, weight]] of indents) {
+		if (usedCount > maxUsed || (usedCount === maxUsed && weight > maxWeight)) {
+			maxUsed = usedCount;
+			maxWeight = weight;
+			result = key;
+		}
+	}
+
+	return result;
+}
+
+function makeIndentString(type, amount) {
+	const indentCharacter = type === INDENT_TYPE_SPACE ? ' ' : '\t';
+	return indentCharacter.repeat(amount);
+}
+
+module.exports = string => {
+	if (typeof string !== 'string') {
+		throw new TypeError('Expected a string');
+	}
+
+	const indents = makeIndentsMap(string);
+	const keyOfMostUsedIndent = getMostUsedKey(indents);
+
 	let type;
+	let amount = 0;
 	let indent = '';
 
-	if (result !== 0) {
-		amount = Number(result.slice(1));
-
-		if (result[0] === 's') {
-			type = 'space';
-			indent = ' '.repeat(amount);
-		} else {
-			type = 'tab';
-			indent = '\t'.repeat(amount);
-		}
+	if (keyOfMostUsedIndent !== undefined) {
+		({type, amount} = decodeIndentsKey(keyOfMostUsedIndent));
+		indent = makeIndentString(type, amount);
 	}
 
 	return {
