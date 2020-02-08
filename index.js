@@ -120,8 +120,8 @@ function getMostUsedKey(indents) {
 }
 
 function makeIndentString(type, amount) {
-	const indent = type === INDENT_TYPE_SPACE ? ' ' : '\t';
-	return indent.repeat(amount);
+	const indentCharacter = type === INDENT_TYPE_SPACE ? ' ' : '\t';
+	return indentCharacter.repeat(amount);
 }
 
 module.exports = string => {
