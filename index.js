@@ -87,8 +87,8 @@ function makeIndentsMap(string) {
 
 // Encode the indent type and amount as a string (e.g. 's4') for use as a compound key in the indents Map.
 function encodeIndentsKey(indentType, indentAmount) {
-	const typeChar = indentType === INDENT_TYPE_SPACE ? 's' : 't';
-	return typeChar + String(indentAmount);
+	const typeCharacter = indentType === INDENT_TYPE_SPACE ? 's' : 't';
+	return typeCharacter + String(indentAmount);
 }
 
 // Extract the indent type and amount from a key of the indents Map.
