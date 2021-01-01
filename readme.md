@@ -1,4 +1,4 @@
-# detect-indent [![Build Status](https://travis-ci.org/sindresorhus/detect-indent.svg?branch=master)](https://travis-ci.org/sindresorhus/detect-indent)
+# detect-indent
 
 > Detect the indentation of code
 
