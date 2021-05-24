@@ -15,7 +15,7 @@ const INDENT_TYPE_TAB = 'tab';
 //    s5: [1, 0],
 //   s12: [1, 0],
 // }
-function makeIndentsMap(string) {
+function makeIndentsMap(string, ignoreSingleSpaces) {
 	const indents = new Map();
 
 	// Remember the size of previous line's indentation
@@ -47,6 +47,11 @@ function makeIndentsMap(string) {
 				indentType = INDENT_TYPE_SPACE;
 			} else {
 				indentType = INDENT_TYPE_TAB;
+			}
+
+			// Ignore single space unless it's the only indent detected to prevent common false positives
+			if (ignoreSingleSpaces && indentType === INDENT_TYPE_SPACE && indent === 1) {
+				continue;
 			}
 
 			if (indentType !== previousIndentType) {
@@ -129,7 +134,11 @@ module.exports = string => {
 		throw new TypeError('Expected a string');
 	}
 
-	const indents = makeIndentsMap(string);
+	let indents = makeIndentsMap(string, true);
+	if (indents.size === 0) {
+		indents = makeIndentsMap(string, false);
+	}
+
 	const keyOfMostUsedIndent = getMostUsedKey(indents);
 
 	let type;
