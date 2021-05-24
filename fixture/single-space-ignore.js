@@ -7,6 +7,6 @@
  *
  */
 
-    2 spaces
-    2 spaces
+    4 spaces
+    4 spaces
 	1 tab
