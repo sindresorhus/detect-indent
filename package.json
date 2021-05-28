@@ -1,6 +1,6 @@
 {
 	"name": "detect-indent",
-	"version": "6.0.0",
+	"version": "6.1.0",
 	"description": "Detect the indentation of code",
 	"license": "MIT",
 	"repository": "sindresorhus/detect-indent",
