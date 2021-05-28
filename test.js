@@ -120,3 +120,21 @@ test('return indentation stats for indented files with spaces and tabs last', t 
 		type: 'tab'
 	});
 });
+
+test('detect the indent of a file with single line comments', t => {
+	const stats = detectIndent(getFile('fixture/single-space-ignore.js'));
+	t.deepEqual(stats, {
+		amount: 4,
+		indent: '    ',
+		type: 'space'
+	});
+});
+
+test('return indentations status for indented files with single spaces only', t => {
+	const stats = detectIndent(getFile('fixture/single-space-only.js'));
+	t.deepEqual(stats, {
+		amount: 1,
+		indent: ' ',
+		type: 'space'
+	});
+});
