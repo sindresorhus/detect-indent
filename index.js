@@ -134,6 +134,8 @@ module.exports = string => {
 		throw new TypeError('Expected a string');
 	}
 
+	// Identify indents while skipping single space indents to avoid common edge cases (e.g. code comments)
+	// If no indents are identified, run again and include all indents for comprehensive detection
 	let indents = makeIndentsMap(string, true);
 	if (indents.size === 0) {
 		indents = makeIndentsMap(string, false);
