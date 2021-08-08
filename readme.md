@@ -24,8 +24,8 @@ $ npm install detect-indent
 Here we modify a JSON file while persisting the indentation:
 
 ```js
-const fs = require('fs');
-const detectIndent = require('detect-indent');
+import fs from 'node:fs';
+import detectIndent from 'detect-indent';
 
 /*
 {

@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import detectIndent = require('.');
+import detectIndent from './index.js';
 
 const indent = detectIndent('');
 expectType<detectIndent.Indent>(indent);

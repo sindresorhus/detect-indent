@@ -25,7 +25,7 @@ Detect the indentation of code.
 @example
 ```
 import * as fs from 'fs';
-import detectIndent = require('detect-indent');
+import detectIndent from 'detect-indent';
 
 // {
 //     "ilove": "pizza"
@@ -47,4 +47,4 @@ fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
 */
 declare function detectIndent(string: string): detectIndent.Indent;
 
-export = detectIndent;
+export default detectIndent;
