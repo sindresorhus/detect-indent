@@ -1,8 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import test from 'ava';
-import detectIndent from '.';
+import detectIndent from './index.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const getFile = file => fs.readFileSync(path.join(__dirname, file), 'utf8');
 
 test('detect the indent of a file with space indent', t => {
@@ -14,7 +16,7 @@ test('return indentation stats for spaces', t => {
 	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
-		type: 'space'
+		type: 'space',
 	});
 });
 
@@ -23,7 +25,7 @@ test('return indentation stats for multiple tabs', t => {
 	t.deepEqual(stats, {
 		amount: 4,
 		indent: '\t\t\t\t',
-		type: 'tab'
+		type: 'tab',
 	});
 });
 
@@ -36,7 +38,7 @@ test('return indentation stats for tabs', t => {
 	t.deepEqual(stats, {
 		amount: 1,
 		indent: '\t',
-		type: 'tab'
+		type: 'tab',
 	});
 });
 
@@ -49,7 +51,7 @@ test('return indentation stats for equal tabs and spaces', t => {
 	t.deepEqual(indent, {
 		amount: 1,
 		indent: '\t',
-		type: 'tab'
+		type: 'tab',
 	});
 });
 
@@ -63,7 +65,7 @@ test('return indentation stats for mostly spaces', t => {
 	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
-		type: 'space'
+		type: 'space',
 	});
 });
 
@@ -77,7 +79,7 @@ test('return indentation stats for various spaces', t => {
 	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
-		type: 'space'
+		type: 'space',
 	});
 });
 
@@ -90,7 +92,7 @@ test('return indentation stats for no indentation', t => {
 	t.deepEqual(stats, {
 		amount: 0,
 		indent: '',
-		type: undefined
+		type: undefined,
 	});
 });
 
@@ -99,7 +101,7 @@ test('return indentation stats for fifty-fifty indented files with spaces first'
 	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
-		type: 'space'
+		type: 'space',
 	});
 });
 
@@ -108,7 +110,7 @@ test('return indentation stats for fifty-fifty indented files with tabs first', 
 	t.deepEqual(stats, {
 		amount: 1,
 		indent: '	',
-		type: 'tab'
+		type: 'tab',
 	});
 });
 
@@ -117,7 +119,7 @@ test('return indentation stats for indented files with spaces and tabs last', t 
 	t.deepEqual(stats, {
 		amount: 1,
 		indent: '	',
-		type: 'tab'
+		type: 'tab',
 	});
 });
 
@@ -126,7 +128,7 @@ test('detect the indent of a file with single line comments', t => {
 	t.deepEqual(stats, {
 		amount: 4,
 		indent: '    ',
-		type: 'space'
+		type: 'space',
 	});
 });
 
@@ -135,6 +137,6 @@ test('return indentations status for indented files with single spaces only', t 
 	t.deepEqual(stats, {
 		amount: 1,
 		indent: ' ',
-		type: 'space'
+		type: 'space',
 	});
 });

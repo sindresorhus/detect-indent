@@ -1,20 +1,23 @@
-'use strict';
-
 // Detect either spaces or tabs but not both to properly handle tabs for indentation and spaces for alignment
 const INDENT_REGEX = /^(?:( )+|\t+)/;
 
 const INDENT_TYPE_SPACE = 'space';
 const INDENT_TYPE_TAB = 'tab';
 
-// Make a Map that counts how many indents/unindents have occurred for a given size and how many lines follow a given indentation.
-// The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents.
-//
-// indents = {
-//    t3: [1, 0],
-//    t4: [1, 5],
-//    s5: [1, 0],
-//   s12: [1, 0],
-// }
+/**
+Make a Map that counts how many indents/unindents have occurred for a given size and how many lines follow a given indentation.
+
+The key is a concatenation of the indentation type (s = space and t = tab) and the size of the indents/unindents.
+
+```
+indents = {
+	t3: [1, 0],
+	t4: [1, 5],
+	s5: [1, 0],
+	s12: [1, 0],
+}
+```
+*/
 function makeIndentsMap(string, ignoreSingleSpaces) {
 	const indents = new Map();
 
@@ -42,12 +45,7 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 			previousIndentType = '';
 		} else {
 			indent = matches[0].length;
-
-			if (matches[1]) {
-				indentType = INDENT_TYPE_SPACE;
-			} else {
-				indentType = INDENT_TYPE_TAB;
-			}
+			indentType = matches[1] ? INDENT_TYPE_SPACE : INDENT_TYPE_TAB;
 
 			// Ignore single space unless it's the only indent detected to prevent common false positives
 			if (ignoreSingleSpaces && indentType === INDENT_TYPE_SPACE && indent === 1) {
@@ -76,12 +74,7 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 
 			// Update the stats
 			entry = indents.get(key);
-
-			if (entry === undefined) {
-				entry = [1, 0]; // Init
-			} else {
-				entry = [++entry[0], entry[1] + weight];
-			}
+			entry = entry === undefined ? [1, 0] : [++entry[0], entry[1] + weight];
 
 			indents.set(key, entry);
 		}
@@ -129,7 +122,7 @@ function makeIndentString(type, amount) {
 	return indentCharacter.repeat(amount);
 }
 
-module.exports = string => {
+export default function detectIndent(string) {
 	if (typeof string !== 'string') {
 		throw new TypeError('Expected a string');
 	}
@@ -155,6 +148,6 @@ module.exports = string => {
 	return {
 		amount,
 		type,
-		indent
+		indent,
 	};
-};
+}

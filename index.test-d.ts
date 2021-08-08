@@ -1,8 +1,8 @@
 import {expectType} from 'tsd';
-import detectIndent = require('.');
+import detectIndent, {Indent} from './index.js';
 
 const indent = detectIndent('');
-expectType<detectIndent.Indent>(indent);
+expectType<Indent>(indent);
 expectType<number>(indent.amount);
 expectType<string>(indent.indent);
 expectType<'space' | 'tab' | undefined>(indent.type);

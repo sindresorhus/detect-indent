@@ -4,13 +4,11 @@
 
 Pass in a string of any kind of text and get the indentation.
 
-
 ## Use cases
 
 - Persisting the indentation when modifying a file.
 - Have new content match the existing indentation.
 - Setting the right indentation in your editor.
-
 
 ## Install
 
@@ -18,14 +16,13 @@ Pass in a string of any kind of text and get the indentation.
 $ npm install detect-indent
 ```
 
-
 ## Usage
 
 Here we modify a JSON file while persisting the indentation:
 
 ```js
-const fs = require('fs');
-const detectIndent = require('detect-indent');
+import fs from 'node:fs';
+import detectIndent from 'detect-indent';
 
 /*
 {
@@ -41,14 +38,13 @@ const json = JSON.parse(file);
 
 json.ilove = 'unicorns';
 
-fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
+fs.writeFileSync('foo.json', JSON.stringify(json, undefined, indent));
 /*
 {
     "ilove": "unicorns"
 }
 */
 ```
-
 
 ## API
 
@@ -57,7 +53,6 @@ Accepts a string and returns an object with stats about the indentation:
 * `amount` {number} - Amount of indentation, for example `2`
 * `type` {'tab' | 'space' | undefined} - Type of indentation. Possible values are `'tab'`, `'space'` or `undefined` if no indentation is detected
 * `indent` {string} - Actual indentation
-
 
 ## Algorithm
 
@@ -99,13 +94,11 @@ p {
 }
 ```
 
-
 ## Related
 
 - [detect-indent-cli](https://github.com/sindresorhus/detect-indent-cli) - CLI for this module
 - [detect-newline](https://github.com/sindresorhus/detect-newline) - Detect the dominant newline character of a string
 - [detect-indent-rs](https://github.com/stefanpenner/detect-indent-rs) - Rust port
-
 
 ---
 

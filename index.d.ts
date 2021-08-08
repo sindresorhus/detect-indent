@@ -1,20 +1,20 @@
-declare namespace detectIndent {
-	interface Indent {
-		/**
-		Type of indentation. Is `undefined` if no indentation is detected.
-		*/
-		type: 'tab' | 'space' | undefined;
+export interface Indent {
+	/**
+	The type of indentation.
 
-		/**
-		Amount of indentation, for example `2`.
-		*/
-		amount: number;
+	It is `undefined` if no indentation is detected.
+	*/
+	type: 'tab' | 'space' | undefined;
 
-		/**
-		Actual indentation.
-		*/
-		indent: string;
-	}
+	/**
+	The amount of indentation. For example, `2`.
+	*/
+	amount: number;
+
+	/**
+	The actual indentation.
+	*/
+	indent: string;
 }
 
 /**
@@ -24,8 +24,8 @@ Detect the indentation of code.
 
 @example
 ```
-import * as fs from 'fs';
-import detectIndent = require('detect-indent');
+import fs from 'node:fs';
+import detectIndent from 'detect-indent';
 
 // {
 //     "ilove": "pizza"
@@ -39,12 +39,10 @@ const json = JSON.parse(file);
 
 json.ilove = 'unicorns';
 
-fs.writeFileSync('foo.json', JSON.stringify(json, null, indent));
+fs.writeFileSync('foo.json', JSON.stringify(json, undefined, indent));
 // {
 //     "ilove": "unicorns"
 // }
 ```
 */
-declare function detectIndent(string: string): detectIndent.Indent;
-
-export = detectIndent;
+export default function detectIndent(string: string): Indent;
