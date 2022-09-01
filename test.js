@@ -140,3 +140,8 @@ test('return indentations status for indented files with single spaces only', t 
 		type: 'space',
 	});
 });
+
+test('detect the indent of a file with many repeats after a single indent', t => {
+	const stats = detectIndent(getFile('fixture/long-repeat.js'));
+	t.is(stats.amount, 4);
+});
