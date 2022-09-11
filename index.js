@@ -36,6 +36,7 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 
 		let indent;
 		let indentType;
+		let use;
 		let weight;
 		let entry;
 		const matches = line.match(INDENT_REGEX);
@@ -58,6 +59,7 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 
 			previousIndentType = indentType;
 
+			use = 1;
 			weight = 0;
 
 			const indentDifference = indent - previousSize;
@@ -65,7 +67,10 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 
 			// Previous line have same indent?
 			if (indentDifference === 0) {
-				weight++;
+				// Not a new "use" of the current indent:
+				use = 0;
+				// But do add a bit to it for breaking ties:
+				weight = 1;
 				// We use the key from previous loop
 			} else {
 				const absoluteIndentDifference = indentDifference > 0 ? indentDifference : -indentDifference;
@@ -74,7 +79,7 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 
 			// Update the stats
 			entry = indents.get(key);
-			entry = entry === undefined ? [1, 0] : [++entry[0], entry[1] + weight];
+			entry = entry === undefined ? [1, 0] : [entry[0] + use, entry[1] + weight];
 
 			indents.set(key, entry);
 		}
