@@ -99,6 +99,7 @@ p {
 - [detect-indent-cli](https://github.com/sindresorhus/detect-indent-cli) - CLI for this module
 - [detect-newline](https://github.com/sindresorhus/detect-newline) - Detect the dominant newline character of a string
 - [detect-indent-rs](https://github.com/stefanpenner/detect-indent-rs) - Rust port
+- [detect-indent-py](https://github.com/Ethan-Vanderheijden/detect-indent-py) - Python port
 
 ---
 
