@@ -12,8 +12,8 @@ Pass in a string of any kind of text and get the indentation.
 
 ## Install
 
-```
-$ npm install detect-indent
+```sh
+npm install detect-indent
 ```
 
 ## Usage
@@ -100,15 +100,3 @@ p {
 - [detect-newline](https://github.com/sindresorhus/detect-newline) - Detect the dominant newline character of a string
 - [detect-indent-rs](https://github.com/stefanpenner/detect-indent-rs) - Rust port
 - [detect-indent-py](https://github.com/Ethan-Vanderheijden/detect-indent-py) - Python port
-
----
-
-<div align="center">
-  <b>
-    <a href="https://tidelift.com/subscription/pkg/npm-detect-indent?utm_source=npm-detect-indent&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
-  </b>
-  <br>
-  <sub>
-    Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-  </sub>
-</div>
