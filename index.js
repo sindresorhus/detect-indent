@@ -4,6 +4,11 @@ const INDENT_REGEX = /^(?:( )+|\t+)/;
 const INDENT_TYPE_SPACE = 'space';
 const INDENT_TYPE_TAB = 'tab';
 
+// Helper function to check if we should ignore single space patterns
+function shouldIgnoreSingleSpace(ignoreSingleSpaces, indentType, value) {
+	return ignoreSingleSpaces && indentType === INDENT_TYPE_SPACE && value === 1;
+}
+
 /**
 Make a Map that counts how many indents/unindents have occurred for a given size and how many lines follow a given indentation.
 
@@ -34,22 +39,17 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 			continue;
 		}
 
-		let indent;
-		let indentType;
-		let use;
-		let weight;
-		let entry;
 		const matches = line.match(INDENT_REGEX);
 
 		if (matches === null) {
 			previousSize = 0;
 			previousIndentType = '';
 		} else {
-			indent = matches[0].length;
-			indentType = matches[1] ? INDENT_TYPE_SPACE : INDENT_TYPE_TAB;
+			const indent = matches[0].length;
+			const indentType = matches[1] ? INDENT_TYPE_SPACE : INDENT_TYPE_TAB;
 
 			// Ignore single space unless it's the only indent detected to prevent common false positives
-			if (ignoreSingleSpaces && indentType === INDENT_TYPE_SPACE && indent === 1) {
+			if (shouldIgnoreSingleSpace(ignoreSingleSpaces, indentType, indent)) {
 				continue;
 			}
 
@@ -59,8 +59,8 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 
 			previousIndentType = indentType;
 
-			use = 1;
-			weight = 0;
+			let use = 1;
+			let weight = 0;
 
 			const indentDifference = indent - previousSize;
 			previousSize = indent;
@@ -73,15 +73,20 @@ function makeIndentsMap(string, ignoreSingleSpaces) {
 				weight = 1;
 				// We use the key from previous loop
 			} else {
-				const absoluteIndentDifference = indentDifference > 0 ? indentDifference : -indentDifference;
+				const absoluteIndentDifference = Math.abs(indentDifference);
+
+				// Ignore single space changes when ignoreSingleSpaces is true
+				// This prevents common false positives from things like aligned comments
+				if (shouldIgnoreSingleSpace(ignoreSingleSpaces, indentType, absoluteIndentDifference)) {
+					continue;
+				}
+
 				key = encodeIndentsKey(indentType, absoluteIndentDifference);
 			}
 
 			// Update the stats
-			entry = indents.get(key);
-			entry = entry === undefined ? [1, 0] : [entry[0] + use, entry[1] + weight];
-
-			indents.set(key, entry);
+			const entry = indents.get(key);
+			indents.set(key, entry === undefined ? [1, 0] : [entry[0] + use, entry[1] + weight]);
 		}
 	}
 

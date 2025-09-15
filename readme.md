@@ -50,15 +50,15 @@ fs.writeFileSync('foo.json', JSON.stringify(json, undefined, indent));
 
 Accepts a string and returns an object with stats about the indentation:
 
-* `amount` {number} - Amount of indentation, for example `2`
-* `type` {'tab' | 'space' | undefined} - Type of indentation. Possible values are `'tab'`, `'space'` or `undefined` if no indentation is detected
-* `indent` {string} - Actual indentation
+- `type` {'tab' | 'space' | undefined} - The type of indentation. It is `undefined` if no indentation is detected.
+- `amount` {number} - The amount of indentation. For example, `2`.
+- `indent` {string} - The actual indentation.
 
 ## Algorithm
 
-The current algorithm looks for the most common difference between two consecutive non-empty lines.
+The current algorithm looks for the most common difference between two consecutive non-empty lines. Single-space indentations and changes are ignored by default to prevent common false positives from comment alignment.
 
-In the following example, even if the 4-space indentation is used 3 times whereas the 2-space one is used 2 times, it is detected as less used because there were only 2 differences with this value instead of 4 for the 2-space indentation:
+In the following example, even if 4-space indentation appears 3 times while 2-space appears only 2 times, the 2-space indentation is detected because there are 4 indent changes of 2 spaces vs only 2 changes of 4 spaces:
 
 ```css
 html {
@@ -78,7 +78,7 @@ p {
 
 [Source.](https://medium.com/@heatherarthur/detecting-code-indentation-eff3ed0fb56b#3918)
 
-Furthermore, if there are more than one most used difference, the indentation with the most lines is selected.
+Furthermore, if there are multiple indent differences with the same usage count, the indentation with the most lines is selected.
 
 In the following example, the indentation is detected as 4-spaces:
 

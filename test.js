@@ -7,10 +7,6 @@ import detectIndent from './index.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const getFile = file => fs.readFileSync(path.join(__dirname, file), 'utf8');
 
-test('detect the indent of a file with space indent', t => {
-	t.is(detectIndent(getFile('fixture/space.js')).indent, '    ');
-});
-
 test('return indentation stats for spaces', t => {
 	const stats = detectIndent(getFile('fixture/space.js'));
 	t.deepEqual(stats, {
@@ -29,10 +25,6 @@ test('return indentation stats for multiple tabs', t => {
 	});
 });
 
-test('detect the indent of a file with tab indent', t => {
-	t.is(detectIndent(getFile('fixture/tab.js')).indent, '\t');
-});
-
 test('return indentation stats for tabs', t => {
 	const stats = detectIndent(getFile('fixture/tab.js'));
 	t.deepEqual(stats, {
@@ -40,10 +32,6 @@ test('return indentation stats for tabs', t => {
 		indent: '\t',
 		type: 'tab',
 	});
-});
-
-test('detect the indent of a file with equal tabs and spaces', t => {
-	t.is(detectIndent(getFile('fixture/mixed-tab.js')).indent, '\t');
 });
 
 test('return indentation stats for equal tabs and spaces', t => {
@@ -144,4 +132,82 @@ test('return indentations status for indented files with single spaces only', t 
 test('detect the indent of a file with many repeats after a single indent', t => {
 	const stats = detectIndent(getFile('fixture/long-repeat.js'));
 	t.is(stats.amount, 4);
+});
+
+test('multi-line comments should not affect indent detection', t => {
+	const originalCode = `interface Test {
+    a: boolean
+    b: boolean
+    c: boolean
+    d: boolean
+    e: boolean
+    f: boolean
+}`;
+
+	const codeWithComments = `interface Test {
+    // a
+    a: boolean
+    // b
+    b: boolean
+    // c
+    c: boolean
+    // d
+    d: boolean
+    // d
+    e: boolean
+    /**
+     * multi-line comment
+     */
+    f: boolean
+}`;
+
+	const originalIndent = detectIndent(originalCode);
+	const commentIndent = detectIndent(codeWithComments);
+
+	t.is(originalIndent.amount, 4);
+	t.is(commentIndent.amount, 4);
+	t.is(originalIndent.type, commentIndent.type);
+});
+
+test('aligned JSDoc comments should not affect indent detection', t => {
+	const code = `/**
+ * JSDoc comment
+ * @param {string} param
+ * @returns {boolean}
+ */
+function test() {
+    return true;
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('single-space alignment in comments should be ignored', t => {
+	const code = `function test() {
+    const obj = {
+        // Comment aligned
+         key: 'value', // Single space alignment
+        other: 'value'
+    };
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('mixed tabs and spaces with single-space alignment should detect tabs', t => {
+	const code = `{
+	key: value,
+	 other: value, // single space + content
+	nested: {
+		deep: true
+	}
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 1);
+	t.is(result.type, 'tab');
 });
