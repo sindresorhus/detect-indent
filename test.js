@@ -211,3 +211,136 @@ test('mixed tabs and spaces with single-space alignment should detect tabs', t =
 	t.is(result.amount, 1);
 	t.is(result.type, 'tab');
 });
+
+test('handle empty string', t => {
+	const stats = detectIndent('');
+	t.deepEqual(stats, {
+		amount: 0,
+		indent: '',
+		type: undefined,
+	});
+});
+
+test('detect 2-space indentation', t => {
+	const code = `module.exports = {
+  name: 'test',
+  nested: {
+    deep: {
+      a: 1,
+      b: 2,
+    },
+  },
+};`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 2);
+	t.is(result.type, 'space');
+});
+
+test('handle CRLF line endings', t => {
+	const code = 'function test() {\r\n    return true;\r\n}\r\n';
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('detect indent in deeply nested code', t => {
+	const code = `if (a) {
+    if (b) {
+        if (c) {
+            if (d) {
+                if (e) {
+                    deep();
+                }
+            }
+        }
+    }
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('detect indent with sparse indentation', t => {
+	const code = `#ifndef HEADER_H
+#define HEADER_H
+
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+#define MAX 100
+#define MIN 0
+
+extern void init();
+extern void cleanup();
+
+#endif`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('continuation/alignment lines should not override real indent when outnumbered', t => {
+	const code = `function test(argumentOne,
+               argumentTwo) {
+    const a = 1;
+    const b = 2;
+    const c = 3;
+    if (a) {
+        return b;
+    }
+    return c;
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('detect 3-space indentation', t => {
+	const code = `function test() {
+   if (condition) {
+      doSomething();
+      if (nested) {
+         deepCall();
+      }
+   }
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 3);
+	t.is(result.type, 'space');
+});
+
+test('handle minimal signal with only one indent transition', t => {
+	const code = `if (true) {
+    return 1;
+}`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
+
+test('handle whitespace-only lines', t => {
+	const stats = detectIndent('    \n    \n    \n');
+	t.deepEqual(stats, {
+		amount: 4,
+		indent: '    ',
+		type: 'space',
+	});
+});
+
+test('handle file starting already indented', t => {
+	const code = `    function inner() {
+        return true;
+    }`;
+
+	const result = detectIndent(code);
+	t.is(result.amount, 4);
+	t.is(result.type, 'space');
+});
